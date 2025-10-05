@@ -10,15 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 import static art.cookedincode.reactivemongo.services.BeerServiceImplTest.getTestBeer;
 import static org.hamcrest.Matchers.equalTo;
@@ -179,13 +176,10 @@ class BeerEndpointTest {
     }
 
     public BeerDTO getSavedTestBeer() {
-        FluxExchangeResult<BeerDTO> beerDTOFluxExchangeResult = webTestClient.post().uri(BeerRouterConfig.BEER_PATH)
+        webTestClient.post().uri(BeerRouterConfig.BEER_PATH)
                 .body(Mono.just(getTestBeer()), BeerDTO.class)
                 .header("Content-Type", "application/json")
-                .exchange()
-                .returnResult(BeerDTO.class);
-
-        List<String> location = beerDTOFluxExchangeResult.getResponseHeaders().get("Location");
+                .exchange();
 
         return webTestClient.get().uri(BeerRouterConfig.BEER_PATH)
                 .exchange().returnResult(BeerDTO.class).getResponseBody().blockFirst();
