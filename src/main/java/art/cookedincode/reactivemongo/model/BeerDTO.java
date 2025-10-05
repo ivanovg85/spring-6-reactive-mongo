@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 public class BeerDTO {
 
-    private Integer id;
+    private String id;
     private String beerName;
     private String beerStyle;
     private String upc;
